@@ -1,0 +1,99 @@
+# OpenAPI specification for the Auth Service.
+# Grows phase by phase: endpoints are added in the same phase that specifies them.
+# Status: proposed — awaiting review. Only the Phase 1 skeleton is defined so far.
+# Conventions: docs/05-api-contracts-and-error-handling.md (repo-relative)
+openapi: 3.1.0
+info:
+  title: Auth Service API
+  version: 0.1.0
+  description: |
+    Centralized OAuth 2.0 / OpenID Connect authentication service.
+
+    **Nothing documented here is implemented yet** — this file tracks the
+    proposed contract and grows with each phase (see docs/03-phase-roadmap.md).
+    Errors use RFC 9457 problem+json with a stable `code` extension member
+    (see docs/api/error-codes.md).
+  license:
+    name: UNLICENSED
+servers:
+  - url: https://auth.example.test/api/v1
+    description: Illustrative local/staging server (replace per environment)
+tags:
+  - name: health
+    description: Service health (Phase 1)
+paths:
+  /health:
+    get:
+      tags: [health]
+      operationId: getHealth
+      summary: Liveness and dependency readiness
+      description: |
+        Returns service status. `status: ok` requires the application and its
+        database connection; a reachable app with an unreachable database
+        responds `status: degraded` with HTTP 503. Never leaks versions,
+        credentials, or driver details. Introduced in Phase 1.
+      security: []
+      # No 4XX documented by design: this endpoint is public, unauthenticated,
+      # and exempt from rate limiting (FOUND-009) — 503 degraded is its only
+      # failure mode. Linter warning operation-4xx-response is expected.
+      responses:
+        '200':
+          description: Service healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, checked_at]
+                properties:
+                  status:
+                    type: string
+                    const: ok
+                  checked_at:
+                    type: string
+                    format: date-time
+              example:
+                status: ok
+                checked_at: '2026-10-15T19:30:00Z'
+        '503':
+          $ref: '#/components/responses/Problem'
+components:
+  responses:
+    Problem:
+      description: Error envelope (RFC 9457 problem+json with `code` extension)
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+  schemas:
+    Problem:
+      type: object
+      description: RFC 9457 problem details with service extensions
+      required: [title, status, code]
+      properties:
+        type:
+          type: string
+          format: uri
+          description: Stable documentation URL for the problem class
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+          description: Safe-for-end-users explanation; never internals
+        instance:
+          type: string
+        code:
+          type: string
+          description: Stable machine code (docs/api/error-codes.md)
+          examples: [auth.invalid_credentials, common.validation_failed]
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          description: Field validation messages (422 only)
+        request_id:
+          type: string
+          description: Correlation ID, also sent as X-Request-Id header
