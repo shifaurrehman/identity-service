@@ -13,7 +13,7 @@
 
 | # | Phase | Document | Depends on | Status | Core outcome |
 |---|---|---|---|---|---|
-| 1 | Foundation | [phase-01-foundation.md](phases/phase-01-foundation.md) | — | **Proposed — awaiting review** | `/api/v1` baseline: versioned routes, uniform error envelope, request IDs, base rate limiting, CORS config, working test suite |
+| 1 | Foundation | [phase-01-foundation.md](phases/phase-01-foundation.md) | — | **Approved — implementation unblocked** | `/api/v1` baseline: versioned routes, uniform error envelope, request IDs, base rate limiting, CORS config, working test suite |
 | 2 | Identity model | phase-02-identity-model.md | 1 | Not started | User schema (ULID keys, status, security metadata), factories/seeders, model tests |
 | 3 | Registration & login | phase-03-registration-and-login.md | 2 | Not started | IdP account-portal endpoints, hashing policy, throttling, anti-enumeration |
 | 4 | Token & session management | phase-04-token-and-session-management.md | 3, ADR-0002 accepted | Not started | Refresh rotation + reuse detection, revocation, device sessions, session invalidation rules |

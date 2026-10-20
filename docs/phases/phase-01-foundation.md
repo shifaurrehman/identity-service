@@ -1,6 +1,6 @@
 # Phase 1 — Foundation
 
-> **Status:** proposed — awaiting review (approval gates implementation) · **Last updated:** 2026-10-15 · Product requirements traced: [01-requirements-and-scope.md](../01-requirements-and-scope.md)
+> **Status:** approved — implementation unblocked · **Last updated:** 2026-10-20 · Product requirements traced: [01-requirements-and-scope.md](../01-requirements-and-scope.md)
 
 ## A. Phase overview
 
